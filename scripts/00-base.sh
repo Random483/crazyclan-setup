@@ -80,9 +80,9 @@ ufw allow OpenSSH
 ufw --force enable
 
 # -------------------------------------------------------------------
-echo "==> Installing FreeIPA CA certificate (system-wide trust)"
-curl -fsSL -o /usr/local/share/ca-certificates/ipa-ca.crt https://ipa.crazyclan.lan/ipa/config/ca.crt
-update-ca-certificates
+# echo "==> Installing FreeIPA CA certificate (system-wide trust)"
+# curl -fsSL -o /usr/local/share/ca-certificates/ipa-ca.crt https://ipa.crazyclan.lan/ipa/config/ca.crt
+# update-ca-certificates
 
 # -------------------------------------------------------------------
 echo "==> Configuring timezone and locale"
