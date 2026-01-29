@@ -1,90 +1,92 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "==> 00-base: Starting base system setup"
+# -------------------------------------------------------------------
+# 00-base.sh
+# Sets up the foundational packages and configuration
+# --------------------------------------------------
+# This script should be safe to re-run and
+# only install essentials.
+# -------------------------------------------------------------------
 
-# Ensure we're running as root
+# Determine root of our repo
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+# Load config
+source "$ROOT_DIR/config/locale.conf"
+source "$ROOT_DIR/config/paths.conf"
+source "$ROOT_DIR/config/roles.conf"
+
+echo "==> 00-base: Initializing base system configuration"
+
+# Must run as root
 if [[ $EUID -ne 0 ]]; then
-  echo "This script must be run as root"
-  exit 1
+    echo "ERROR: This script must be run as root"
+    exit 1
 fi
 
+# Make apt noninteractive
 export DEBIAN_FRONTEND=noninteractive
 
-# ------------------------------------------------------------------
-# System update
-# ------------------------------------------------------------------
-echo "==> Updating system packages"
-apt update
-apt -y upgrade
+# -------------------------------------------------------------------
+echo "==> Updating package lists"
+apt update -y
+apt upgrade -y
 
-# ------------------------------------------------------------------
-# Core utilities (small, boring, essential)
-# ------------------------------------------------------------------
-echo "==> Installing core utilities"
-apt -y install \
-  ca-certificates \
-  curl \
-  wget \
-  gnupg \
-  lsb-release \
-  apt-transport-https \
-  software-properties-common \
-  unzip \
-  zip \
-  tar \
-  rsync \
-  jq \
-  vim \
-  nano \
-  less \
-  htop \
-  tmux \
-  bash-completion \
-  sudo \
-  openssh-client \
-  openssh-server
+# -------------------------------------------------------------------
+echo "==> Installing essential core utilities"
+apt install -y \
+    ca-certificates \
+    curl \
+    wget \
+    gnupg \
+    lsb-release \
+    software-properties-common \
+    apt-transport-https \
+    unzip \
+    zip \
+    tar \
+    rsync \
+    jq \
+    vim \
+    nano \
+    less \
+    htop \
+    tmux \
+    bash-completion \
+    openssh-client \
+    openssh-server \
+    sudo
 
-# ------------------------------------------------------------------
-# Enable and start SSH (useful even on desktops)
-# ------------------------------------------------------------------
-echo "==> Enabling SSH service"
+# -------------------------------------------------------------------
+echo "==> Enabling and starting SSH"
 systemctl enable ssh
 systemctl start ssh
 
-# ------------------------------------------------------------------
-# Time & locale sanity
-# ------------------------------------------------------------------
-echo "==> Setting timezone and locale"
-timedatectl set-timezone Europe/London
-
-locale-gen en_GB.UTF-8
-update-locale LANG=en_GB.UTF-8
-
-# ------------------------------------------------------------------
-# Flatpak & Flathub (Pop!_OS-friendly app delivery)
-# ------------------------------------------------------------------
+# -------------------------------------------------------------------
 echo "==> Installing Flatpak and enabling Flathub"
-apt -y install flatpak
+apt install -y flatpak
 
 if ! flatpak remote-list | grep -q flathub; then
-  flatpak remote-add --if-not-exists flathub \
-    https://flathub.org/repo/flathub.flatpakrepo
+    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 fi
 
-# ------------------------------------------------------------------
-# Firewall baseline (non-intrusive)
-# ------------------------------------------------------------------
-echo "==> Configuring basic firewall"
-apt -y install ufw
+# -------------------------------------------------------------------
+echo "==> Configuring UFW firewall"
+apt install -y ufw
 ufw allow OpenSSH
 ufw --force enable
 
-# ------------------------------------------------------------------
-# Housekeeping
-# ------------------------------------------------------------------
-echo "==> Cleaning up"
-apt -y autoremove
-apt -y autoclean
+# -------------------------------------------------------------------
+echo "==> Configuring timezone and locale"
+timedatectl set-timezone "$TIMEZONE"
+locale-gen "$LOCALE"
+update-locale LANG="$LOCALE"
 
-echo "==> 00-base: Completed successfully"
+# -------------------------------------------------------------------
+echo "==> Cleanup"
+apt autoremove -y
+apt autoclean -y
+
+echo "==> 00-base: Complete"
