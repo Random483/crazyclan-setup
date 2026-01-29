@@ -1,35 +1,27 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
-ROLE="$1"
+ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-if[[-z "$ROLE" ]]; then
-  echo "Usage: $0 {dev|family|kid}"
-  exit 1
-fi
+# Load role config
+source "$ROOT_DIR/config/roles.conf"
 
-for script in scripts/00-base.sh \
-                scripts/10-ipa-client.sh \
-                scripts/20-cert-trust.sh \
-                scripts/30-desktop-core.sh
-do
-    bash "$script"
-done
+# Always run base
+bash "$ROOT_DIR/scripts/00-base.sh"
 
+# Conditionally run next layers
 case "$ROLE" in
   dev)
-    bash scripts/40-dev-tools.sh
-  ;;
-  family)
-    bash scripts/50-family-tools.sh
-    bash scripts/60-minecraft.sh
+    bash "$ROOT_DIR/scripts/40-dev-tools.sh"
     ;;
-  kid)
-    bash scripts/50-family-tools.sh
-    bash scripts/60-minecraft.sh
+  family-desktop)
+    bash "$ROOT_DIR/scripts/20-desktop-core.sh"
+    ;;
+  server)
+    bash "$ROOT_DIR/scripts/30-ipa-client.sh"
     ;;
   *)
-    echo "Unknown role: $ROLE"
+    echo "Unknown ROLE: $ROLE"
     exit 1
     ;;
 esac
