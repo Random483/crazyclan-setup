@@ -9,8 +9,16 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
+
 # Load configs
 source "$ROOT_DIR/config/ipa.conf"
+
+# Prompt for IPA admin password if not set
+if [[ -z "${IPA_ADMIN_PASSWORD:-}" ]]; then
+    echo -n "Enter IPA admin password: "
+    read -s IPA_ADMIN_PASSWORD
+    echo
+fi
 
 echo "==> 10-ipa-client: Starting FreeIPA client setup"
 
@@ -45,7 +53,8 @@ if ipa-client-install --unattended --domain="$IPA_DOMAIN" \
    --hostname="$(hostname -f)" \
    --mkhomedir \
    --force-join \
-   --principal="$IPA_ADMIN_USER" ; then
+   --principal="$IPA_ADMIN_USER" \
+   --password="$IPA_ADMIN_PASSWORD" ; then
     echo "==> IPA enrollment successful"
 else
     echo "ERROR: IPA enrollment failed"
