@@ -86,6 +86,12 @@ else
 fi
 
 # ----------------------
+
+# ----------------------
+# GIMP (Photo Editor)
+echo "==> Installing GIMP (Photo Editor)"
+apt install -y gimp
+
 # VLC
 echo "==> Installing VLC"
 apt install -y vlc
