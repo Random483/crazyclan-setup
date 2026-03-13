@@ -67,6 +67,7 @@ echo "==> Ensuring SSSD is enabled and running"
 systemctl enable sssd
 systemctl restart sssd
 
+
 # -------------------------------------------------------------------
 echo "==> Verifying IPA connectivity"
 
@@ -77,6 +78,26 @@ fi
 
 if ! id "$IPA_ADMIN_USER" >/dev/null 2>&1; then
     echo "WARNING: Admin user lookup failed (may be expected)"
+fi
+
+# -------------------------------------------------------------------
+# Register host in FreeIPA DNS
+echo "==> Registering host in FreeIPA DNS"
+HOST_FQDN="$(hostname -f)"
+HOST_SHORT="$(hostname -s)"
+HOST_IP="$(hostname -I | awk '{print $1}')"
+
+# Add host if not present
+if ! ipa host-show "$HOST_FQDN" >/dev/null 2>&1; then
+    ipa host-add "$HOST_FQDN"
+else
+    echo "[INFO] Host $HOST_FQDN already present in FreeIPA."
+fi
+# Add DNS A record if not present
+if ! ipa dnsrecord-show "$IPA_DOMAIN" "$HOST_SHORT" | grep -q "$HOST_IP"; then
+    ipa dnsrecord-add "$IPA_DOMAIN" "$HOST_SHORT" --a-rec "$HOST_IP"
+else
+    echo "[INFO] DNS A record for $HOST_SHORT already present."
 fi
 
 # -------------------------------------------------------------------

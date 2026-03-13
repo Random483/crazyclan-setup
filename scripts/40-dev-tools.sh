@@ -33,7 +33,14 @@ else
 fi
 
 # ----------------------
+###############################################################
 # MakeMKV (with Java 8)
+# Note: Java 8 is installed system-wide via apt because MakeMKV
+# only needs a single version and does not require per-user or
+# per-instance Java version switching. For MultiMC (Minecraft),
+# SDKMAN is used in 30-family-tools.sh to allow users to install
+# and switch between multiple Java versions as needed.
+###############################################################
 echo "==> Installing MakeMKV and Java 8 (for MakeMKV)"
 apt install -y openjdk-8-jre
 # MakeMKV is not in apt; use official beta .deb
