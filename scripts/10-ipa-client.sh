@@ -56,17 +56,6 @@ apt install -y \
 log_info "Checking if already joined to IPA"
 
 
-    # -------------------------------------------------------------------
-    # Ensure UFW allows FreeIPA-required ports
-    log_info "Updating UFW firewall rules for FreeIPA"
-    ufw allow 80/tcp
-    ufw allow 88/tcp
-    ufw allow 389/tcp
-    ufw allow 464/tcp
-    ufw allow 88/udp
-    ufw allow 464/udp
-    ufw allow 123/udp
-
 if ipa-client-install --unattended --domain="$IPA_DOMAIN" \
    --server="$IPA_SERVER" \
    --realm="$IPA_REALM" \

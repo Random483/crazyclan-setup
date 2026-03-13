@@ -78,11 +78,7 @@ if ! flatpak remote-list | grep -q flathub; then
 fi
 
 # -------------------------------------------------------------------
-echo "==> Configuring UFW firewall"
-apt install -y ufw
-ufw allow OpenSSH
-
-ufw --force enable
+# UFW firewall setup is now only enabled for server role. See 50-server-core.sh.
 
 # -------------------------------------------------------------------
 # echo "==> Installing FreeIPA CA certificate (system-wide trust)"

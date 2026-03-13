@@ -1,3 +1,4 @@
+# UFW firewall is not enabled for desktop/family devices (LAN only).
 # -------------------------------------------------------------------
 # 20-desktop-core.sh
 # Sets up desktop environment and Nextcloud integration

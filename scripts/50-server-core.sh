@@ -1,3 +1,15 @@
+# Enable and configure UFW firewall for server role
+apt install -y ufw
+ufw allow OpenSSH
+ufw allow 80/tcp
+ufw allow 443/tcp
+ufw --force enable
+# Ensure UFW allows Nextcloud ports (for server)
+if command -v ufw &>/dev/null; then
+    log_info "Updating UFW firewall rules for Nextcloud server"
+    ufw allow 80/tcp
+    ufw allow 443/tcp
+fi
 #!/usr/bin/env bash
 # -------------------------------------------------------------------
 # 50-server-core.sh
