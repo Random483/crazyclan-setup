@@ -16,20 +16,25 @@ bash "$ROOT_DIR/scripts/00-base.sh"
 # Identity layer (always, unless explicitly skipped)
 bash "$ROOT_DIR/scripts/10-ipa-client.sh"
 
+
 # -------------------------------------------------------------------
 # Role-specific layers
 case "$ROLE" in
   dev)
     bash "$ROOT_DIR/scripts/20-desktop-core.sh"
+    bash "$ROOT_DIR/scripts/21-desktop-extras.sh"
+    bash "$ROOT_DIR/scripts/22-sync-de-settings.sh"
+    bash "$ROOT_DIR/scripts/30-family-tools.sh"
     bash "$ROOT_DIR/scripts/40-dev-tools.sh"
     ;;
   family-desktop)
     bash "$ROOT_DIR/scripts/20-desktop-core.sh"
+    bash "$ROOT_DIR/scripts/21-desktop-extras.sh"
     bash "$ROOT_DIR/scripts/30-family-tools.sh"
     ;;
   server)
     # Servers still need IPA, but no desktop
-    bash "$ROOT_DIR/scripts/30-server-core.sh"
+    bash "$ROOT_DIR/scripts/50-server-core.sh"
     ;;
   *)
     echo "ERROR: Unknown ROLE '$ROLE'"
