@@ -10,28 +10,36 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 
+
 # Load configs
 source "$ROOT_DIR/config/ipa.conf"
 
+# Load logging functions
+source "$ROOT_DIR/lib/logging.sh"
+log_stage "10-ipa-client.sh"
+
 # Prompt for IPA admin password if not set
+echo "==> 10-ipa-client: Starting FreeIPA client setup"
+
 if [[ -z "${IPA_ADMIN_PASSWORD:-}" ]]; then
-    echo -n "Enter IPA admin password: "
+    log_info "Enter IPA admin password: "
     read -s IPA_ADMIN_PASSWORD
     echo
 fi
 
-echo "==> 10-ipa-client: Starting FreeIPA client setup"
+log_info "10-ipa-client: Starting FreeIPA client setup"
 
 # Must run as root
+
 if [[ $EUID -ne 0 ]]; then
-    echo "ERROR: This script must be run as root"
+    log_error "This script must be run as root"
     exit 1
 fi
 
 export DEBIAN_FRONTEND=noninteractive
 
 # -------------------------------------------------------------------
-echo "==> Installing FreeIPA client packages"
+log_info "Installing FreeIPA client packages"
 
 apt install -y \
     freeipa-client \
@@ -45,7 +53,7 @@ apt install -y \
     packagekit
 
 # -------------------------------------------------------------------
-echo "==> Checking if already joined to IPA"
+log_info "Checking if already joined to IPA"
 
 if ipa-client-install --unattended --domain="$IPA_DOMAIN" \
    --server="$IPA_SERVER" \
@@ -55,34 +63,35 @@ if ipa-client-install --unattended --domain="$IPA_DOMAIN" \
    --force-join \
    --principal="$IPA_ADMIN_USER" \
    --password="$IPA_ADMIN_PASSWORD" ; then
-    echo "==> IPA enrollment successful"
+    log_info "IPA enrollment successful"
 else
-    echo "ERROR: IPA enrollment failed"
+    log_error "IPA enrollment failed"
     exit 1
 fi
 
 # -------------------------------------------------------------------
-echo "==> Ensuring SSSD is enabled and running"
+log_info "Ensuring SSSD is enabled and running"
 
 systemctl enable sssd
 systemctl restart sssd
 
 
 # -------------------------------------------------------------------
-echo "==> Verifying IPA connectivity"
+log_info "Verifying IPA connectivity"
+
 
 if ! getent passwd admin >/dev/null; then
-    echo "ERROR: IPA users not resolvable"
+    log_error "IPA users not resolvable"
     exit 1
 fi
 
 if ! id "$IPA_ADMIN_USER" >/dev/null 2>&1; then
-    echo "WARNING: Admin user lookup failed (may be expected)"
+    log_warn "Admin user lookup failed (may be expected)"
 fi
 
 # -------------------------------------------------------------------
 # Register host in FreeIPA DNS
-echo "==> Registering host in FreeIPA DNS"
+log_info "Registering host in FreeIPA DNS"
 HOST_FQDN="$(hostname -f)"
 HOST_SHORT="$(hostname -s)"
 HOST_IP="$(hostname -I | awk '{print $1}')"
@@ -91,13 +100,13 @@ HOST_IP="$(hostname -I | awk '{print $1}')"
 if ! ipa host-show "$HOST_FQDN" >/dev/null 2>&1; then
     ipa host-add "$HOST_FQDN"
 else
-    echo "[INFO] Host $HOST_FQDN already present in FreeIPA."
+    log_info "Host $HOST_FQDN already present in FreeIPA."
 fi
 # Add DNS A record if not present
 if ! ipa dnsrecord-show "$IPA_DOMAIN" "$HOST_SHORT" | grep -q "$HOST_IP"; then
     ipa dnsrecord-add "$IPA_DOMAIN" "$HOST_SHORT" --a-rec "$HOST_IP"
 else
-    echo "[INFO] DNS A record for $HOST_SHORT already present."
+    log_info "DNS A record for $HOST_SHORT already present."
 fi
 
 # -------------------------------------------------------------------

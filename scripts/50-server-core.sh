@@ -3,7 +3,14 @@
 # 50-server-core.sh
 # Installs core headless/server utilities (no Avahi)
 # -------------------------------------------------------------------
+
 set -euo pipefail
+
+# Load logging functions
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+source "$ROOT_DIR/lib/logging.sh"
+log_stage "50-server-core.sh"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"

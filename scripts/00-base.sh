@@ -13,10 +13,15 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
+
 # Load config
 source "$ROOT_DIR/config/locale.conf"
 source "$ROOT_DIR/config/paths.conf"
 source "$ROOT_DIR/config/roles.conf"
+
+# Load logging functions
+source "$ROOT_DIR/lib/logging.sh"
+log_stage "00-base.sh"
 
 echo "==> 00-base: Initializing base system configuration"
 

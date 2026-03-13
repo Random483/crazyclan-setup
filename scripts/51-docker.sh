@@ -3,7 +3,14 @@
 # 51-docker.sh
 # Installs Docker and Docker Compose
 # -------------------------------------------------------------------
+
 set -euo pipefail
+
+# Load logging functions
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+source "$ROOT_DIR/lib/logging.sh"
+log_stage "51-docker.sh"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"

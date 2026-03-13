@@ -8,6 +8,11 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
+
+# Load logging functions
+source "$ROOT_DIR/lib/logging.sh"
+log_stage "22-sync-de-settings.sh"
+
 source "$ROOT_DIR/config/users.conf"
 source "$ROOT_DIR/config/cloud.conf"
 

@@ -1,3 +1,8 @@
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+# Load logging functions
+source "$ROOT_DIR/lib/logging.sh"
+log_stage "90-cleanup.sh"
 # -------------------------------------------------------------------
 # 90-cleanup.sh
 # Performs basic system cleanup after setup

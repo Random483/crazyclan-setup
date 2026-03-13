@@ -3,7 +3,14 @@
 # 41-unity-hub.sh (renamed from 45)
 # Installs Unity Hub on Ubuntu/Pop!_OS systems
 # -------------------------------------------------------------------
+
 set -euo pipefail
+
+# Load logging functions
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+source "$ROOT_DIR/lib/logging.sh"
+log_stage "41-unity-hub.sh"
 
 apt update -y
 apt install -y curl

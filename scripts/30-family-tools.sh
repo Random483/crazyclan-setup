@@ -8,8 +8,13 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
+
 # Load user config
 source "$ROOT_DIR/config/users.conf"
+
+# Load logging functions
+source "$ROOT_DIR/lib/logging.sh"
+log_stage "30-family-tools.sh"
 
 echo "==> 30-family-tools: Installing family desktop applications"
 
