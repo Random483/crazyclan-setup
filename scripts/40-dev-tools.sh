@@ -22,10 +22,9 @@ apt update -y
 
 # ----------------------
 # Python, pip, venv, Jupyter
-echo "==> Installing Python, pip, venv, and Jupyter"
-apt install -y python3 python3-pip python3-venv
-pip3 install --upgrade pip
-pip3 install jupyterlab notebook
+echo "==> Installing Python, pip, venv, and JupyterLab/Notebook (via apt)"
+apt install -y python3 python3-pip python3-venv pipx
+pipx install jupyterlab
 
 # ----------------------
 # VS Code (Microsoft repo)
@@ -50,23 +49,33 @@ fi
 ###############################################################
 echo "==> Installing MakeMKV and Java 8 (for MakeMKV)"
 apt install -y openjdk-8-jre
-# MakeMKV is not in apt; use official beta .deb
-MAKEMKV_URL="https://www.makemkv.com/download/makemkv-bin-1.17.6.deb"
-TMP_DEB="/tmp/makemkv.deb"
-wget -O "$TMP_DEB" "$MAKEMKV_URL"
-apt install -y "$TMP_DEB" || dpkg -i "$TMP_DEB" || echo "[WARN] MakeMKV install failed."
-rm -f "$TMP_DEB"
+# Install build prerequisites for MakeMKV
+apt install -y build-essential pkg-config libc6-dev libssl-dev libexpat1-dev libavcodec-dev libgl1-mesa-dev qtbase5-dev zlib1g-dev
+
+# Download and build MakeMKV from source
+cd /tmp
+wget https://www.makemkv.com/download/makemkv-oss-1.18.3.tar.gz
+wget https://www.makemkv.com/download/makemkv-bin-1.18.3.tar.gz
+tar xzf makemkv-oss-1.18.3.tar.gz
+tar xzf makemkv-bin-1.18.3.tar.gz
+
+# Build OSS
+cd makemkv-oss-1.18.3
+./configure
+make
+sudo make install
+
+# Build BIN
+cd ../makemkv-bin-1.18.3
+make
+sudo make install
+
+cd ~
 
 # ----------------------
 # Handbrake
 echo "==> Installing Handbrake"
 apt install -y handbrake handbrake-cli
-
-# ----------------------
-# 3D Printing: PrusaSlicer and Cura
-echo "==> Installing PrusaSlicer and Cura"
-apt install -y prusaslicer cura
-
 
 # ----------------------
 echo "==> Unity Hub install script available as scripts/41-unity-hub.sh. Run this script to install Unity Hub."

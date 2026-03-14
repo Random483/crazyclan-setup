@@ -18,35 +18,35 @@ log_stage "21-desktop-extras.sh"
 
 apt update -y
 
-case "$DESKTOP_ENV" in
-  kde)
-    echo "==> Installing KDE Plasma and SDDM"
-    apt install -y kde-plasma-desktop sddm
-    if [ -f /etc/X11/default-display-manager ]; then
-        echo "/usr/bin/sddm" > /etc/X11/default-display-manager
-    fi
-    ;;
-  gnome)
-    echo "==> Installing GNOME and GDM3"
-    apt install -y gnome-shell gnome-session gdm3
-    if [ -f /etc/X11/default-display-manager ]; then
-        echo "/usr/sbin/gdm3" > /etc/X11/default-display-manager
-    fi
-    ;;
-  cosmic)
-    echo "==> Cosmic desktop is default on Pop!_OS. No extra install needed."
-    ;;
-  all)
-    echo "==> Installing KDE, GNOME, and keeping Cosmic. Users can choose at login."
-    apt install -y kde-plasma-desktop sddm gnome-shell gnome-session gdm3
-    if [ -f /etc/X11/default-display-manager ]; then
-        echo "/usr/bin/sddm" > /etc/X11/default-display-manager
-    fi
-    ;;
-  *)
-    echo "[WARN] Unknown DESKTOP_ENV '$DESKTOP_ENV'. Skipping DE install."
-    ;;
-esac
+# case "$DESKTOP_ENV" in
+#   kde)
+#     echo "==> Installing KDE Plasma and SDDM"
+#     apt install -y kde-plasma-desktop sddm
+#     if [ -f /etc/X11/default-display-manager ]; then
+#         echo "/usr/bin/sddm" > /etc/X11/default-display-manager
+#     fi
+#     ;;
+#   gnome)
+#     echo "==> Installing GNOME and GDM3"
+#     apt install -y gnome-shell gnome-session gdm3
+#     if [ -f /etc/X11/default-display-manager ]; then
+#         echo "/usr/sbin/gdm3" > /etc/X11/default-display-manager
+#     fi
+#     ;;
+#   cosmic)
+#     echo "==> Cosmic desktop is default on Pop!_OS. No extra install needed."
+#     ;;
+#   all)
+#     echo "==> Installing KDE, GNOME, and keeping Cosmic. Users can choose at login."
+#     apt install -y kde-plasma-desktop sddm gnome-shell gnome-session gdm3
+#     if [ -f /etc/X11/default-display-manager ]; then
+#         echo "/usr/bin/sddm" > /etc/X11/default-display-manager
+#     fi
+#     ;;
+#   *)
+#     echo "[WARN] Unknown DESKTOP_ENV '$DESKTOP_ENV'. Skipping DE install."
+#     ;;
+# esac
 
 # Install Neofetch
 apt install -y neofetch
@@ -90,6 +90,7 @@ for dir in /home/*; do
     fi
 
     fc-cache -f -v || true
+done
 # End of for loop; removed stray fi
 
 echo "==> KDE, GNOME, Neofetch, and fonts setup complete. Log out and back in to see changes."
