@@ -97,6 +97,9 @@ HOST_FQDN="$(hostname -f)"
 HOST_SHORT="$(hostname -s)"
 HOST_IP="$(hostname -I | awk '{print $1}')"
 
+# Obtain Kerberos ticket for admin user (non-interactive)
+echo "$IPA_ADMIN_PASSWORD" | kinit "$IPA_ADMIN_USER"
+
 # Add host if not present
 if ! ipa host-show "$HOST_FQDN" >/dev/null 2>&1; then
     ipa host-add "$HOST_FQDN"
