@@ -126,26 +126,5 @@ else
 fi
 
 # -------------------------------------------------------------------
-# Ensure home directories exist for all users in users.conf
-log_info "Ensuring home directories exist for all users in users.conf"
-source "$ROOT_DIR/config/users.conf"
-
-# Collect all users from PRIMARY_USER and FAMILY_USERS
-ALL_USERS=("$PRIMARY_USER" "${FAMILY_USERS[@]}")
-
-for user in "${ALL_USERS[@]}"; do
-    if id "$user" &>/dev/null; then
-        USER_HOME=$(getent passwd "$user" | cut -d: -f6)
-        if [[ -n "$USER_HOME" && ! -d "$USER_HOME" ]]; then
-            log_info "Creating home directory for $user at $USER_HOME"
-            mkdir -p "$USER_HOME"
-            chown "$user:$user" "$USER_HOME"
-        fi
-    else
-        echo "User $user does not exist (yet). Skipping."
-    fi
-done
-
 log_info "FreeIPA client setup complete"
 log_info "You should now be able to log in with IPA users."
-

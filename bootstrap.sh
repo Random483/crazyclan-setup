@@ -23,7 +23,6 @@ case "$ROLE" in
   dev)
     bash "$ROOT_DIR/scripts/20-desktop-core.sh"
     bash "$ROOT_DIR/scripts/21-desktop-extras.sh"
-    bash "$ROOT_DIR/scripts/22-sync-de-settings.sh"
     bash "$ROOT_DIR/scripts/30-family-tools.sh"
     bash "$ROOT_DIR/scripts/40-dev-tools.sh"
     ;;
