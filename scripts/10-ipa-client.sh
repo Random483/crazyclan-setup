@@ -9,19 +9,10 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-# Set DNS server for FreeIPA and system
-FREEIPA_DNS="192.168.10.26"
-
-# Update /etc/resolv.conf (temporary, until reboot or network restart)
-echo "nameserver $FREEIPA_DNS" | sudo tee /etc/resolv.conf
-
-# Update NetworkManager DNS (persistent)
-for conn in $(nmcli -t -f NAME connection show); do
-    nmcli connection modify "$conn" ipv4.dns "$FREEIPA_DNS"
-    nmcli connection up "$conn"
-done
-
 echo "DNS set to $FREEIPA_DNS for all connections."
+
+# open ports
+systemctl stop ufw
 
 # Load configs
 source "$ROOT_DIR/config/ipa.conf"
