@@ -88,7 +88,8 @@ for dir in /home/*; do
         echo -e '\n# Show system info on terminal open\nneofetch' >> "$dir/.bashrc"
         chown $(basename "$dir"):$(basename "$dir") "$dir/.bashrc" || true
     fi
+
     fc-cache -f -v || true
-fi
+# End of for loop; removed stray fi
 
 echo "==> KDE, GNOME, Neofetch, and fonts setup complete. Log out and back in to see changes."
