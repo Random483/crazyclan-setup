@@ -81,10 +81,11 @@ ln -s ~/Nextcloud/.Minecraft/saves ~/.minecraft/saves
 
 ### Step 9: Set-up hosts file
 
-This is a fallback in case the DNS goes down. I don't want to maintain this on every PC, but DNS hasn't always been reliable:
+This is a fallback in case the DNS goes down. I don't want to maintain this on every PC, but DNS hasn't always been reliable, so below is the MVP I want to remember:
 
 ```
 192.168.10.26     ipa.crazyclan.lan
 192.168.10.25     nas.crazyclan.lan
-
+192.168.10.25     cloud.crazyclan.lan
+192.168.10.25     jelly.crazyclan.lan
 ```
