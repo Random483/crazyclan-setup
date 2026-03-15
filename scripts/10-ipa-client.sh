@@ -9,10 +9,13 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-echo "DNS set to $FREEIPA_DNS for all connections."
-
 # open ports
-systemctl stop ufw
+if command -v ufw >/dev/null; then
+    systemctl stop ufw || true
+    echo "ufw stopped."
+else
+    echo "ufw not installed, skipping."
+fi
 
 # Load configs
 source "$ROOT_DIR/config/ipa.conf"
