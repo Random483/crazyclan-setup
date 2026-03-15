@@ -64,3 +64,27 @@ In one of the steps, we installed Nextcloud desktop app. Now, for each user, we 
 ### Step 7: Set up Minecraft
 
 For kids who play Minecraft, using MultiMC set the Instance and Skins folders to connect to the Nextcloud folder.
+
+### Step 8: Set up sym-links
+
+After Minecraft has been run, it's safe to create the symlinks for all folders:
+
+``` bash
+mc -r ~/Documents/* ~/Nextcloud/Documents
+rm -r ~/Documents
+ln -s ~/Nextcloud/Documents ~/Documents
+mc -r ~/Pictures/* ~/Nextcloud/Photos
+rm -r ~/Pictures
+ln -s ~/Nextcloud/Photos ~/Pictures
+ln -s ~/Nextcloud/.Minecraft/saves ~/.minecraft/saves
+```
+
+### Step 9: Set-up hosts file
+
+This is a fallback in case the DNS goes down. I don't want to maintain this on every PC, but DNS hasn't always been reliable:
+
+```
+192.168.10.26     ipa.crazyclan.lan
+192.168.10.25     nas.crazyclan.lan
+
+```
