@@ -77,6 +77,8 @@ mc -r ~/Pictures/* ~/Nextcloud/Photos
 rm -r ~/Pictures
 ln -s ~/Nextcloud/Photos ~/Pictures
 ln -s ~/Nextcloud/.Minecraft/saves ~/.minecraft/saves
+rm -r ~/.local/share/Mumble
+ln -s ~/Nextcloud/.config/Mumble ~/.local/share/Mumble
 ```
 
 ### Step 9: Set-up hosts file
