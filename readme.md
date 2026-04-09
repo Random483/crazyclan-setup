@@ -71,14 +71,11 @@ After Minecraft has been run, it's safe to create the symlinks for all folders:
 
 ``` bash
 mc -r ~/Documents/* ~/Nextcloud/Documents
-rm -r ~/Documents
-ln -s ~/Nextcloud/Documents ~/Documents
 mc -r ~/Pictures/* ~/Nextcloud/Photos
+rm -r ~/Documents
 rm -r ~/Pictures
+ln -s ~/Nextcloud/Documents ~/Documents
 ln -s ~/Nextcloud/Photos ~/Pictures
-ln -s ~/Nextcloud/.Minecraft/saves ~/.minecraft/saves
-rm -r ~/.local/share/Mumble
-ln -s ~/Nextcloud/.config/Mumble ~/.local/share/Mumble
 ```
 
 ### Step 9: Set-up hosts file
@@ -90,4 +87,10 @@ This is a fallback in case the DNS goes down. I don't want to maintain this on e
 192.168.10.25     nas.crazyclan.lan
 192.168.10.25     cloud.crazyclan.lan
 192.168.10.25     jelly.crazyclan.lan
+```
+
+### Step 10: Set compose key
+
+``` bash
+setxkbmap -option compose:ralt
 ```
